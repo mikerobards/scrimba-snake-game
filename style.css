@@ -1,3 +1,23 @@
 body {
-    margin: 0;
+    margin: 10;
+    padding: 10;
+    text-align: center;
+}
+
+.grid {
+    width: 200px;
+    height: 200px;
+    border: solid black 2px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+}
+
+.square {
+    width: 20px;
+    height: 20px;
+}
+
+.snake {
+    background-color:green;
 }
