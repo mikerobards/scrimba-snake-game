@@ -1,11 +1,15 @@
 const grid = document.querySelector('.grid')
 const startButton = document.getElementById('start')
-const score = document.getElementById('score')
+const scoreDisplay = document.getElementById('score')
 let squares = []
 let currentSnake = [2, 1, 0]
 let direction = 1
 const width = 10
 let appleIndex = 0
+let score = 0
+scoreDisplay.textContent = score
+let intervalTime = 1000
+let speed = 0.9
 
 function createGrid() {
 
@@ -28,18 +32,39 @@ function move() {
         (currentSnake[0] % width === 0 && direction === -1) ||
         (currentSnake[0] - width < 0 && direction === -width) ||
         squares[currentSnake[0] + direction].classList.contains('snake')
-    ) {
+    )
         return clearInterval(timerId)
-    }
 
     const tail = currentSnake.pop()
     squares[tail].classList.remove('snake')
     currentSnake.unshift(currentSnake[0] + direction)
+
+    //deal with snake head getting the apple
+    if (squares[currentSnake[0]].classList.contains('apple')) {
+        //remove the class of apple
+        squares[currentSnake[0]].classList.remove('apple')
+        //grow our snake by adding class of snake to it
+        squares[tail].classList.add('snake')
+        //grow our snake array
+        currentSnake.push(tail)
+        //generate a new apple
+        generateApple()
+        //add one to the score
+        score++
+        scoreDisplay.textContent = score
+        //speed up our snake
+        clearInterval(timerId)
+        intervalTime *= speed
+        timerId = setInterval(move, intervalTime)
+    }
+
+
     squares[currentSnake[0]].classList.add('snake')
 }
+
 move()
 
-let timerId = setInterval(move, 1000)
+let timerId = setInterval(move, intervalTime)
 
 function generateApple() {
     do {
@@ -53,23 +78,19 @@ generateApple()
 function control(e) {
     switch (e.key) {
         case 'ArrowLeft':
-            console.log('Left Key pressed!')
             direction = -1
             break;
         case 'ArrowUp':
-            console.log('Up Key pressed!')
             direction = -width
             break;
         case 'ArrowRight':
-            console.log('Right Key pressed!')
             direction = 1
             break;
         case 'ArrowDown':
-            console.log('Down Key pressed!')
             direction = +width
             break;
     }
 }
-22
+
 window.addEventListener('keydown', control)
 
