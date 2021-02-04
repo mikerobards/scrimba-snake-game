@@ -10,20 +10,38 @@ let score = 0
 scoreDisplay.textContent = score
 let intervalTime = 1000
 let speed = 0.9
+let timerId = 0
 
 function createGrid() {
-
     for (let i = 0; i < width * width; i++) {
         const square = document.createElement('div')
         square.classList.add('square')
         grid.appendChild(square)
         squares.push(square)
     }
-
 }
 createGrid()
-
 currentSnake.forEach(index => squares[index].classList.add('snake'))
+
+
+function startGame() {
+
+    currentSnake.forEach(index => squares[index].classList.remove('snake'))
+    
+    squares[appleIndex].classList.remove('apple')
+    clearInterval(timerId)
+    currentSnake = [2, 1, 0]
+    score = 0
+    scoreDisplay.textContent = score
+
+    direction = 1
+    intervalTime = 1000
+    generateApple()
+    currentSnake.forEach(index => squares[index].classList.add('snake'))
+
+    timerId = setInterval(move, intervalTime)
+    
+}
 
 function move() {
     if (
@@ -57,14 +75,8 @@ function move() {
         intervalTime *= speed
         timerId = setInterval(move, intervalTime)
     }
-
-
     squares[currentSnake[0]].classList.add('snake')
 }
-
-move()
-
-let timerId = setInterval(move, intervalTime)
 
 function generateApple() {
     do {
@@ -73,7 +85,6 @@ function generateApple() {
     squares[appleIndex].classList.add('apple')
 }
 generateApple()
-
 
 function control(e) {
     switch (e.key) {
@@ -92,5 +103,7 @@ function control(e) {
     }
 }
 
-window.addEventListener('keydown', control)
+document.addEventListener('keydown', control)
+
+startButton.addEventListener('click', startGame)
 
